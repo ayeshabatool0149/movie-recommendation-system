@@ -40,20 +40,20 @@ Top 5 recommendations for `Toy Story (1995)`:
 
 ## Evaluation
 
-I evaluated the item-based collaborative filtering model using a hold-out approach. For each user with at least 5 liked movies (rating >= 4), 20% of liked movies were hidden, and the model recommended 10 unseen movies. The model was compared with a popularity baseline.
+I evaluated the model on held-out users. In each run, 80% of users were used to build the cosine similarity matrix and the popularity baseline, and the remaining 20% were used for testing. For each test user with at least 5 liked movies (rating >= 4), 20% of liked movies were hidden, and the model recommended 10 unseen movies. Results are the mean +/- standard deviation over 5 random splits (about 112 test users per split).
 
 | Method | Precision@10 | Hit rate@10 |
 |---|---|---|
-| Item-based CF (cosine) | 0.238 | 0.808 |
-| Popularity baseline | 0.128 | 0.562 |
+| Item-based CF (cosine) | 0.211 +/- 0.024 | 0.767 +/- 0.051 |
+| Popularity baseline | 0.134 +/- 0.018 | 0.591 +/- 0.055 |
 
-Users evaluated: 569 (MovieLens small, movies with 50+ ratings).
+Similarity and popularity use training users only, so there is no leakage from test ratings.
 
 ## Limitations and Future Work
 
 - The system uses only ratings, not genres or movie content, so some recommendations (for example Forrest Gump) are popular movies rather than true content matches.
 - Missing ratings are filled with 0, which can affect similarity; mean-centering or matrix factorization (SVD) could improve results.
-- The evaluation is a first estimate: the similarity matrix and popularity baseline were built from the full rating data (including held-out ratings), so results are optimistic. A stricter version would build them from training data only.
+- Evaluation uses a simple hold-out on one small dataset; cross-validation and more metrics (e.g. NDCG, coverage) could be added.
 - A hybrid model combining genres and ratings could handle new movies better.
 
 ## How to Run
